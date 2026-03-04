@@ -75,6 +75,11 @@ class LinkedList:
 
     def delete_all(self):
         """Deletes all nodes from the linked list (except the sentinel node)."""
+        actNode = self.head
+        while actNode != self.endnode:
+            self.head = actNode.next
+            del actNode
+            actNode = self.head
 
     def find(self, data) -> Node | None:
         """
@@ -192,8 +197,6 @@ class LinkedList:
             prevNode = actNode
             actNode = nextNode
         return counter
-
-
 
     def __getitem__(self, index: int):
         """
@@ -346,6 +349,8 @@ if __name__ == "__main__":
         lst.append(i)
     print(lst)
     print(lst.delete_all_occurrences(1))
+    print(lst)
+    lst.delete_all()
     print(lst)
 
 
