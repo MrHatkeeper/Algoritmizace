@@ -1,3 +1,6 @@
+from itertools import count
+
+
 class Node:
     """Represents a node in a singly linked list."""
 
@@ -42,9 +45,9 @@ class LinkedList:
 
     def insert_at_beginning(self, data):
         """Inserts a new node with the given data at the beginning of the linked list."""
-        new_node = Node(data)
-        new_node.next = self.head
-        self.head = new_node
+        nNode = Node(data)
+        nNode.next = self.head
+        self.head = nNode
 
     def display(self):
         for x in self:
@@ -52,29 +55,28 @@ class LinkedList:
         print(".")
 
     def display1(self):
-        actual_node = self.head
-        while actual_node != self.endnode:
-            print(actual_node, end=" -> ")
-            actual_node = actual_node.next
+        actNode = self.head
+        while actNode != self.endnode:
+            print(actNode, end=" -> ")
+            actNode = actNode.next
         print(".")
 
     def __str__(self) -> str:
         """Converts the LinkedList to string (for print): lists data from all nodes in the linked list."""
-        actual_node = self.head
+        actNode = self.head
         s = "{"
-        while actual_node != self.endnode:
-            s += f"{actual_node}"
-            if actual_node.next != self.endnode:
+        while actNode != self.endnode:
+            s += f"{actNode}"
+            if actNode.next != self.endnode:
                 s += " -> "
-            actual_node = actual_node.next
+            actNode = actNode.next
         s = s + "}"
         return s
 
     def delete_all(self):
         """Deletes all nodes from the linked list (except the sentinel node)."""
-        ...
 
-    def find(self, data) -> Node:
+    def find(self, data) -> Node | None:
         """
         Finds the first occurrence of a node with the specified data in the linked list.
 
@@ -82,7 +84,12 @@ class LinkedList:
             - The first node containing the specified data, if found.
             - None if no matching node is found.
         """
-        ...
+        actNode = self.head
+        while actNode != self.endnode:
+            if actNode.data == data:
+                return actNode
+            actNode = actNode.next
+        return None
 
     def first(self):
         """
@@ -91,6 +98,8 @@ class LinkedList:
         Raises:
             ValueError: If the linked list is empty.
         """
+        if self.is_empty():
+            raise ValueError("The linked list is empty")
         return self.head.data
 
     def last(self):
@@ -100,7 +109,13 @@ class LinkedList:
         Raises:
             ValueError: If the linked list is empty.
         """
-        ...
+        actNode = self.head
+        while actNode != self.endnode:
+            if actNode.next == self.endnode:
+                return actNode.data
+            actNode = actNode.next
+        if self.is_empty():
+            raise ValueError("The linked list is empty")
 
     def remove_first(self):
         """
@@ -109,7 +124,11 @@ class LinkedList:
         Raises:
             ValueError: If the linked list is empty.
         """
-        ...
+        if self.is_empty():
+            raise ValueError("The linked list is empty")
+        holder = self.head.next
+        del self.head
+        self.head = holder
 
     def remove_last(self):
         """
@@ -118,7 +137,14 @@ class LinkedList:
         Raises:
             ValueError: If the linked list is empty.
         """
-        ...
+        if self.is_empty():
+            raise ValueError("The linked list is empty")
+        actNode = self.head
+        while actNode != self.endnode:
+            if actNode.next.next == self.endnode:
+                del actNode.next
+                actNode.next = self.endnode
+            actNode = actNode.next
 
     def delete(self, data):
         """
@@ -127,7 +153,20 @@ class LinkedList:
         Returns:
             bool: True if a node was deleted, False if the data was not found.
         """
-        ...
+        actNode = self.head
+        prevNode = None
+        while actNode != self.endnode:
+            nextNode = actNode.next
+            if actNode.data == data:
+                if actNode == self.head:
+                    self.head = nextNode
+                if prevNode is not None:
+                    prevNode.next = nextNode
+                del actNode
+                return True
+            prevNode = actNode
+            actNode = nextNode
+        return False
 
     def delete_all_occurrences(self, data):
         """
@@ -136,7 +175,25 @@ class LinkedList:
         Returns:
             int: The number of deleted nodes.
         """
-        ...
+        actNode = self.head
+        prevNode = None
+        counter = 0
+        while actNode != self.endnode:
+            nextNode = actNode.next
+            if actNode.data == data:
+                if actNode == self.head:
+                    self.head = nextNode
+                if prevNode is not None:
+                    prevNode.next = nextNode
+                del actNode
+                "Z tohoto řádku je mi smutno, ale nenapadá mě, jak jinak bych to mohl udělat hezky."
+                actNode = prevNode
+                counter +=1
+            prevNode = actNode
+            actNode = nextNode
+        return counter
+
+
 
     def __getitem__(self, index: int):
         """
@@ -145,13 +202,13 @@ class LinkedList:
         Raises:
             IndexError: If the index is out of range.
         """
-        actual_node = self.head
+        actNode = self.head
         i = 0
-        while actual_node != self.endnode:
+        while actNode != self.endnode:
             if i == index:
-                return actual_node.data
+                return actNode.data
             i += 1
-            actual_node = actual_node.next
+            actNode = actNode.next
         raise IndexError("Index out of range")
 
     def __setitem__(self, index: int, data):
@@ -161,35 +218,35 @@ class LinkedList:
         Raises:
             IndexError: If the index is out of range.
         """
-        actual_node = self.head
+        actNode = self.head
         i = 0
-        while actual_node != self.endnode:
+        while actNode != self.endnode:
             if i == index:
-                actual_node.data = data
+                actNode.data = data
                 return
             i += 1
-            actual_node = actual_node.next
+            actNode = actNode.next
         raise IndexError("Index out of range")
 
     def __iter__(self):
         """
         Returns a Python iterator for the linked list.
         """
-        actual_node = self.head
-        while actual_node != self.endnode:
-            yield actual_node.data
-            actual_node = actual_node.next
+        actNode = self.head
+        while actNode != self.endnode:
+            yield actNode.data
+            actNode = actNode.next
         # return LinkedListIterator(self.head, self.endnode)
 
     def find_iter(self, data) -> "PositionIterator":
         """
         Returns an iterator pointing to the first occurrence of the specified data.
         """
-        actual_node = self.head
-        while actual_node != self.endnode:
-            if actual_node.data == data:
-                return PositionIterator(self, actual_node)
-        return PositionIterator(self, endnode)
+        actNode = self.head
+        while actNode != self.endnode:
+            if actNode.data == data:
+                return PositionIterator(self, actNode)
+        return PositionIterator(self, self.endnode)
 
     def start_iter(self) -> "PositionIterator":
         """
@@ -215,7 +272,7 @@ class LinkedListIterator:
         """
         Initializes the iterator with the starting node and the sentinel node (endnode) marking the end of the list.
         """
-        self.actual_node = head
+        self.actNode = head
         self.endnode = endnode
 
     def __iter__(self):
@@ -229,10 +286,10 @@ class LinkedListIterator:
         Raises:
             StopIteration: If the iterator reaches the sentinel node (endnode).
         """
-        if self.actual_node == self.endnode:
+        if self.actNode == self.endnode:
             raise StopIteration()
-        data = self.actual_node.data
-        self.actual_node = self.actual_node.next
+        data = self.actNode.data
+        self.actNode = self.actNode.next
         return data
 
 
@@ -244,12 +301,12 @@ class PositionIterator:
         Initializes the iterator with a reference to the linked list and a node representing the current position.
         """
         self.linked_list = linked_list
-        self.actual_node = node
+        self.actNode = node
 
     def __eq__(self, __value: object):
         """Checks whether two iterators represent the same position."""
         return isinstance(__value,
-                          PositionIterator) and self.linked_list == __value.linked_list and self.actual_node == __value.actual_node
+                          PositionIterator) and self.linked_list == __value.linked_list and self.actNode == __value.actNode
 
     def get_value(self):
         """Returns the value stored at the current iterator position.
@@ -257,9 +314,9 @@ class PositionIterator:
            Raises:
                ValueError: If the iterator points to the sentinel node (endnode).
         """
-        if self.actual_node == self.linked_list.endnode:
+        if self.actNode == self.linked_list.endnode:
             raise ValueError()
-        return self.actual_node.data
+        return self.actNode.data
 
     def set_value(self, data):
         """Sets the value at the current iterator position.
@@ -267,9 +324,9 @@ class PositionIterator:
            Raises:
                ValueError: If the iterator points to the sentinel node (endnode).
         """
-        if self.actual_node == self.linked_list.endnode:
+        if self.actNode == self.linked_list.endnode:
             raise ValueError()
-        self.actual_node.data = data
+        self.actNode.data = data
 
     def move_to_next(self):
         """Moves the iterator to the next position in the linked list.
@@ -277,17 +334,18 @@ class PositionIterator:
         Raises:
                ValueError: If the iterator points to the sentinel node (endnode).
         """
-        if self.actual_node == self.linked_list.endnode:
+        if self.actNode == self.linked_list.endnode:
             raise ValueError()
-        self.actual_node = self.actual_node.next
+        self.actNode = self.actNode.next
 
 
 if __name__ == "__main__":
-    node = Node("A")
     lst = LinkedList()
-    print(lst, lst.is_empty())
     for i in range(10):
         lst.append(i)
+        lst.append(i)
+    print(lst)
+    print(lst.delete_all_occurrences(1))
     print(lst)
 
 
