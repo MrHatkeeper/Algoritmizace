@@ -346,12 +346,16 @@ if __name__ == "__main__":
     lst = LinkedList()
     for i in range(10):
         lst.append(i)
-        lst.append(i)
     print(lst)
-    print(lst.delete_all_occurrences(1))
-    print(lst)
-    lst.delete_all()
-    print(lst)
+    print(f"first: {lst.first()}")
+    lst.remove_first()
+    print(f"removed first: {lst}")
+    print(f"last: {lst.last()}")
+    lst.remove_last()
+    print(f"removed last: {lst}")
+    print(f"find 1: {lst.find(1)}")
+    print(f"find a: {lst.find("a")}")
+
 
 
 def t():
