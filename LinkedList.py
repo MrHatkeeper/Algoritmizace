@@ -114,13 +114,13 @@ class LinkedList:
         Raises:
             ValueError: If the linked list is empty.
         """
+        if self.is_empty():
+            raise ValueError("The linked list is empty")
         actNode = self.head
         while actNode != self.endnode:
             if actNode.next == self.endnode:
                 return actNode.data
             actNode = actNode.next
-        if self.is_empty():
-            raise ValueError("The linked list is empty")
 
     def remove_first(self):
         """
@@ -357,8 +357,25 @@ if __name__ == "__main__":
     print(f"find last: {lst.find(lst.last())}")
     print(f"find first: {lst.find(lst.first())}")
     print(f"find a: {lst.find("a")}")
+    lst.delete(2)
+    print(f"delete 2: {lst}")
+    lst.delete(lst.first())
+    print(f"delete first: {lst}")
+    lst.delete(lst.last())
+    print(f"delete last: {lst}")
 
+    emptyLst = LinkedList()
+    """Testy pro prázdný list. Odkomentované vyhazují error, jelikož jsou prázdné a podle zadání mají vracet error.
 
+    print(f"empty list removed first: {emptyLst}")
+    print(f"empty list first: {emptyLst.first()}")
+    print(f"empty list last: {emptyLst.last()}")
+    emptyLst.remove_first()
+    print(f"empty list remove first: {emptyLst}")
+    emptyLst.remove_last()
+    print(f"empty list remove last: {emptyLst}")"""
+    print(f"empty list find a: {emptyLst.find("a")}")
+    print(f"empty list delete a: {emptyLst.delete("a")}")
 
 def t():
     s = [1, 2, 3]
