@@ -353,7 +353,9 @@ if __name__ == "__main__":
     print(f"last: {lst.last()}")
     lst.remove_last()
     print(f"removed last: {lst}")
-    print(f"find 1: {lst.find(1)}")
+    print(f"find 5: {lst.find(5)}")
+    print(f"find last: {lst.find(lst.last())}")
+    print(f"find first: {lst.find(lst.first())}")
     print(f"find a: {lst.find("a")}")
 
 
