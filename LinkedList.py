@@ -132,8 +132,10 @@ class LinkedList:
         if self.is_empty():
             raise ValueError("The linked list is empty")
         holder = self.head.next
+        output = self.head.data
         del self.head
         self.head = holder
+        return output
 
     def remove_last(self):
         """
@@ -147,8 +149,10 @@ class LinkedList:
         actNode = self.head
         while actNode != self.endnode:
             if actNode.next.next == self.endnode:
+                output = actNode.next.data
                 del actNode.next
                 actNode.next = self.endnode
+                return output
             actNode = actNode.next
 
     def delete(self, data):
@@ -191,7 +195,6 @@ class LinkedList:
                 if prevNode is not None:
                     prevNode.next = nextNode
                 del actNode
-                "Z tohoto řádku je mi smutno, ale nenapadá mě, jak jinak bych to mohl udělat hezky."
                 actNode = prevNode
                 counter +=1
             prevNode = actNode
@@ -376,6 +379,9 @@ if __name__ == "__main__":
     print(f"empty list remove last: {emptyLst}")"""
     print(f"empty list find a: {emptyLst.find("a")}")
     print(f"empty list delete a: {emptyLst.delete("a")}")
+    print(lst)
+    print(lst.remove_first())
+    print(lst)
 
 def t():
     s = [1, 2, 3]
