@@ -1,3 +1,4 @@
+from logging import root
 from typing import reveal_type
 
 
@@ -43,7 +44,7 @@ class BinarySearchTree:
         while actNode is not None:
             if actNode.data == data:
                 return actNode
-            if actNode. left is not None and data < actNode.data:
+            if actNode.left is not None and data < actNode.data:
                 actNode = actNode.left
             elif actNode.right is not None and data > actNode.data:
                 actNode = actNode.right
@@ -61,7 +62,18 @@ class BinarySearchTree:
         Returns:
             Node with the given data if found, otherwise None.
         """
-       ...
+        if self.root is None:
+            return None
+        def find(node):
+            if node.data == data:
+                return node
+            if node.left is not None and data < node.data:
+                return find(node.left)
+            elif node.right is not None and data > node.data:
+                return find(node.right)
+            return None
+        return find(self.root)
+
 
 
     def insert(self, data) -> None:
@@ -273,19 +285,30 @@ class BinarySearchTree:
         """
         ...
 
-
-
-if __name__ == "__main__":
-    tree = BinarySearchTree()
-    print("empty tree", tree.find(1))
-    tree.insert(8)
-    tree.insert(3)
-    tree.insert(56)
-    tree.insert(13)
-    #tree.print()
+def testFind(tree):
+    print("testing find")
     print("testing 3 (in):",tree.find(3))
     print("testing 56(in):",tree.find(56))
     print("testing 8(in):",tree.find(8))
     print("testing 2(not in):",tree.find(2))
     print("testing 57(not in):",tree.find(57))
 
+def testRecursiveFind(tree):
+    print("testing recursive find")
+    print("testing 3 (in):",tree.recursive_find(3))
+    print("testing 56(in):",tree.recursive_find(56))
+    print("testing 8(in):",tree.recursive_find(8))
+    print("testing 2(not in):",tree.recursive_find(2))
+
+if __name__ == "__main__":
+    tree = BinarySearchTree()
+    print("empty tree find", tree.find(1))
+    print("empty tree recursive find", tree.recursive_find(1))
+    tree.insert(8)
+    tree.insert(3)
+    tree.insert(56)
+    tree.insert(13)
+    #tree.print()
+    testFind(tree)
+    print("")
+    testRecursiveFind(tree)
