@@ -29,11 +29,7 @@ class Stack:
         """
         if self.lst.is_empty():
             raise Exception('Stack is empty')
-        out = self.lst.head.data
-        holder = self.lst.head
-        self.lst.head = self.lst.head.next
-        del holder
-        return out
+        return self.lst.remove_first()
     
     def top(self):
         """Returns data from the top element of the stack without removing it.
@@ -49,6 +45,7 @@ class Queue:
     def __init__(self):
         """Initializes an empty queue."""
         self.lst = ll.LinkedList()
+        self.length = 0
     
     def is_empty(self):
         """Returns True if the queue is empty, otherwise False."""
@@ -56,16 +53,12 @@ class Queue:
     
     def __len__(self):
         """Returns the number of elements in the queue."""
-        counter = 0
-        actNode = self.lst.head
-        while actNode != self.lst.endnode:
-            counter += 1
-            actNode = actNode.next
-        return counter
+        return self.length
     
     def enqueue(self, data): 
         """Adds an element to the end of the queue."""
         self.lst.append(data)
+        self.length += 1
     
     def dequeue(self):
         """Removes the front element of the queue and returns data from it.
@@ -73,6 +66,7 @@ class Queue:
         """
         if self.lst.is_empty():
             raise Exception('Queue is empty')
+        self.length -= 1
         return self.lst.remove_first()
     
     def front(self):
@@ -81,7 +75,7 @@ class Queue:
         """
         if self.lst.is_empty():
             raise Exception('Queue is empty')
-        return self.lst
+        return self.lst[0]
 
 
 
@@ -106,16 +100,17 @@ def test_queue():
     print("start:", len(q), q.is_empty())
     for i in range(10):
         q.enqueue(i)
-    print("after push",q.front(), q.is_empty())
+    print("after push",q.front(), q.is_empty(), len(q))
     q.enqueue(12)
     print("print after added data:", q.front(), q.is_empty())
     q.dequeue()
     print("after removed data", q.front())
+    print(f"first element: {q.front()}")
 
     while not q.is_empty():
         print(q.front(), q.dequeue())
     print("after removing data:", q.is_empty())
 
 if __name__ == "__main__":
-    #test_stack()
-    test_queue()
+    test_stack()
+    #test_queue()

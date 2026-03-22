@@ -1,3 +1,4 @@
+from Tools.scripts.summarize_stats import output_stats
 from itertools import count
 
 
@@ -147,12 +148,20 @@ class LinkedList:
         if self.is_empty():
             raise ValueError("The linked list is empty")
         actNode = self.head
+        prevNode = None
         while actNode != self.endnode:
-            if actNode.next.next == self.endnode:
-                output = actNode.next.data
-                del actNode.next
-                actNode.next = self.endnode
-                return output
+            if actNode.next == self.endnode:
+                if prevNode is not None:
+                    prevNode.next = actNode.next
+                    output = actNode.data
+                    del actNode
+                    return output
+                else:
+                    self.head = actNode.next
+                    output = actNode.data
+                    del actNode
+                    return output
+            prevNode = actNode
             actNode = actNode.next
 
     def delete(self, data):
@@ -366,7 +375,6 @@ if __name__ == "__main__":
     print(f"delete first: {lst}")
     lst.delete(lst.last())
     print(f"delete last: {lst}")
-
     emptyLst = LinkedList()
     """Testy pro prázdný list. Odkomentované vyhazují error, jelikož jsou prázdné a podle zadání mají vracet error.
 
@@ -382,6 +390,14 @@ if __name__ == "__main__":
     print(lst)
     print(lst.remove_first())
     print(lst)
+
+    print(f"test to delete all occurences")
+    a = LinkedList()
+    for i in range(5):
+        a.append(1)
+    print(a)
+    a.delete_all_occurrences(1)
+    print(a)
 
 def t():
     s = [1, 2, 3]
