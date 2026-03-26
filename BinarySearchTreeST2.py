@@ -251,7 +251,7 @@ class BinarySearchTree:
         actNode = self.root
         while actNode.left is not None:
             actNode = actNode.left
-        return actNode.data
+        return actNode
 
     def serialize_to_list(self) -> list:
         """
