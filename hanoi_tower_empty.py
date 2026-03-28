@@ -1,48 +1,5 @@
 from typing import List
 
-
-def hanoi_tower(n: int) -> None:
-    """
-    Solves the Tower of Hanoi puzzle for 'n' disks using nested functions.
-
-    The function prints the state of all three towers at the 
-    beginning and after each move.
-    Disks are represented by integers (larger number = larger disk).
-    Empty positions are shown as '_'.
-
-    Hanoi Tower Solution for n = 3:
-    0:321:___:___
-    1:32_:1__:___
-    2:3__:1__:2__
-    3:3__:___:21_
-    4:___:3__:21_
-    5:1__:3__:2__
-    6:1__:32_:___
-    7:___:321:___
-    """
-
-    def print_tower(tower) -> None:
-        """
-        Prints one tower as a string of disk numbers, using '_' for empty level.
-        """
-        ...
-
-    def print_towers() -> None:
-        """
-        Prints the step number and current state of all three towers.
-        """
-        ...
-
-    def move(n, tower_from, tower_to, tower_aux):
-        """
-        Recursive function to move 'n' disks from tower_from to tower_to
-        using tower_aux as auxiliary tower.
-        """
-        ...
-
-    ...
-
-# Alternatively:
 class HanoiTower:
     """
     Object-oriented implementation of the Tower of Hanoi puzzle.
@@ -57,32 +14,53 @@ class HanoiTower:
         Initializes a step counter and prints the initial state.
         Then starts the recursive algorithm to solve the puzzle.
         """
+        self.step = 0
+        self.a = []
+        self.b = []
+        self.c = []
+        self.maxLength = n
+        for i in range(1,n+1):
+            self.a.insert(0,i)
+        self.print_towers()
+        self._move(n,self.a,self.b,self.c)
 
-        ...
-
-    def _print_tower(self, tower: List[int]) -> None:
+    def _print_tower(self, tower: List[int]) -> str:
         """
         Prints one tower as a string of disk numbers, using '_' for empty level.
         """
-        ...
+        out = ""
+        for d in tower:
+            out += str(d)
+        out = out.ljust(self.maxLength, "_")
+        return ":" + out
 
     def print_towers(self) -> None:
         """
         Prints the step number and current state of all three towers.
         """
-        ...
+        out = f"{self.step}" + self._print_tower(self.a) + self._print_tower(self.b) + self._print_tower(self.c)
+        print(out)
 
     def _move(self, n, tower_from, tower_to, tower_aux) -> None:
         """
         Recursive function to move 'n' disks from t_from to t_to
         using t_aux as auxiliary tower.
         """
-        ...
+        if n == 1:
+            self.step +=1
+            tower_to.append(tower_from.pop())
+            self.print_towers()
+            return
+        self._move(n - 1, tower_from, tower_aux, tower_to)
+        self.step += 1
+        tower_to.append(tower_from.pop())
+        self.print_towers()
+        self._move(n - 1, tower_aux, tower_to, tower_from)
+
 
 if __name__ == "__main__":
     for n in range(1, 6):
-        ...
-        # HanoiTower(n)
-        # hanoi_tower(n)
+        print()
+        HanoiTower(n)
 
     print("test ok")
