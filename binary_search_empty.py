@@ -10,7 +10,7 @@ def binary_search_recursive(ordered_list: list, value: int) -> int:
     Returns:
         int: Index of the value if found, otherwise -1.
     """
-    if value < ordered_list[0] or value > ordered_list[-1]:
+    if len(ordered_list) == 0 or value < ordered_list[0] or value > ordered_list[-1]:
         return -1
     return _binSearchRec(ordered_list, value, len(ordered_list))
 
@@ -35,7 +35,7 @@ def binary_search(ordered_list: list, value: int) -> int:
     Returns:
         int: Index of the value if found, otherwise -1.
     """
-    if value < ordered_list[0] or value > ordered_list[-1]:
+    if len(ordered_list) == 0 or value < ordered_list[0] or value > ordered_list[-1]:
         return -1
     min = 0
     max = len(ordered_list)
@@ -83,4 +83,3 @@ def testBinSearch():
         print(l, "| hledám:",x, binary_search(l, x))
 testBinRecSearch()
 testBinSearch()
-

@@ -1,3 +1,7 @@
+from cmath import inf
+
+import test
+
 class Graph:
     """
     Representation of a graph (directed or undirected, with positive edge weights).
@@ -17,7 +21,7 @@ class Graph:
         """
         if number_of_nodes < 0:
             raise ValueError("number_of_nodes must be a non-negative integer.")
-        self.nodesNum = number_of_nodes
+        self.nodeCount = number_of_nodes
         self.directed = directed
         self.graph = []
 
@@ -38,17 +42,17 @@ class Graph:
            Raise ValueError or IndexError if invalid.
 
         """
-        if self._checkIndex(u) or self._checkIndex(v):
+        if self.checkIndex(u) or self.checkIndex(v):
             raise IndexError("Nodes must exists.")
-        if weight < 0 and weight is not None:
+        if weight is not None and weight < 0:
             raise ValueError("Weight must be non-negative.")
 
         self.graph[u][v] = weight
         if not self.directed:
             self.graph[v][u] = weight
 
-    def _checkIndex(self, u):
-        return u < 0 or u >= self.nodesNum
+    def checkIndex(self, u):
+        return u < 0 or u >= self.nodeCount
 
     def get_edge_weight(self, u, v):
         """Return the weight of the edge from u to v.
@@ -58,13 +62,13 @@ class Graph:
         Exception handling:
             Check valid node indices. Raise ValueError or IndexError if invalid.
         """
-        if self._checkIndex(u) or self._checkIndex(v):
+        if self.checkIndex(u) or self.checkIndex(v):
             raise ValueError("Nodes must exists.")
         return self.graph[u][v]
 
     def get_number_of_nodes(self):
         """Return the total number of nodes in the graph."""
-        return self.nodesNum
+        return self.nodeCount
 
     def get_neighbors(self, u):
         """Return a list of all neighbors (reachable nodes) from node u.
@@ -77,11 +81,11 @@ class Graph:
         """
         out = []
 
-        if self._checkIndex(u):
+        if self.checkIndex(u):
             raise ValueError("Node must exists.")
 
-        for i in range(self.nodesNum):
-            if self.graph[u][i] is not None and u != i:
+        for i in range(self.nodeCount):
+            if self.graph[u][i] is not None:
                 out.append(i)
         return out
 
@@ -105,10 +109,14 @@ class Graph:
         [((0, 1), 1), ((1, 2), 1)]         # undirected (only one per pair, u <= v)
         """
         out = []
-        for i in range(self.nodesNum):
-            for j in range(1,self.nodesNum):
-                if self.graph[i][j] is not None and i != j:
-                    out.append(((i, j), self.graph[i][j]))
+        for i in range(self.nodeCount):
+            for j in range(self.nodeCount):
+                if not self.directed:
+                    if self.graph[i][j] is not None and i <= j:
+                        out.append(((i, j),self.graph[i][j]))
+                else:
+                    if self.graph[i][j] is not None:
+                        out.append(((i, j),self.graph[i][j]))
         return out
 
     def find_connected_components(self):
@@ -128,7 +136,7 @@ class Graph:
             raise ValueError("Graph is directed.")
 
         out = []
-        for i in range(self.nodesNum):
+        for i in range(self.nodeCount):
             canContinue = True
             for path in out:
                 if i in path:
@@ -142,7 +150,7 @@ class Graph:
         if u in out:
             return out
         out.append(u)
-        for i in range(self.nodesNum):
+        for i in range(self.nodeCount):
             if self.graph[u][i] is not None and u != i:
                 self.dfs(i, out)
         return out
@@ -164,7 +172,34 @@ class Graph:
             Check for negative weights (if using Dijkstra, weights must be non-negative). Raise ValueError if invalid.
 
         """
-        ...
+        if self.checkIndex(start):
+            raise ValueError("Start node must exists.")
+
+        distance = [inf] * self.nodeCount
+        parent = [-1] * self.nodeCount
+        checkedNodes = []
+
+        distance[start] = 0
+        parent[start] = start
+        while True:
+            node = -1
+            minDist = inf
+            for i in range(self.nodeCount):
+                if i not in checkedNodes and distance[i] < minDist:
+                    minDist = distance[i]
+                    node = i
+            if node == -1:
+                break
+            checkedNodes.append(node)
+            for v in self.get_neighbors(node):
+                weight = self.get_edge_weight(node, v)
+                if weight < 0:
+                    raise ValueError("Weights must be non-negative.")
+                if distance[node] + weight < distance[v]:
+                    distance[v] = distance[node] + weight
+                    parent[v] = node
+        return distance, parent
+
 
 #
     def reconstruct_the_shortest_path(self, destination, previous):
@@ -182,13 +217,14 @@ class Graph:
             Check that previous is a list of valid indices or -1. Raise ValueError if invalid.
             Return [] if node is unreachable.
         """
-        ...
-
-if __name__ == "__main__":
-    g = Graph(6, False)
-    g.add_or_change_edge(0, 2)
-    g.add_or_change_edge(2, 3)
-    g.add_or_change_edge(4, 5)
-
-    print(g)
-    print(g.find_connected_components())
+        out = []
+        node = destination
+        while True:
+            if previous[node] == -1:
+                return []
+            if node == previous[node]:
+                out.append(node)
+                out.reverse()
+                return out
+            out.append(node)
+            node = previous[node]

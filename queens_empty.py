@@ -1,8 +1,6 @@
 # Solves the N-Queens problem:
 # Place N queens on an N×N chessboard so that no two queens attack each other.
 # Queens must not share the same row, column, or diagonal.
-import copy
-
 def is_safe(board, row, column):
     """
     Check whether a queen can be safely placed on board at position (row, column).

@@ -1,4 +1,4 @@
-from Graph import Graph
+from search.Graph_empty import Graph
 
 # Directed graph:
 graph = Graph(6)
